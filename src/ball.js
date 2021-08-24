@@ -1,3 +1,5 @@
+import { detectCollision } from "./collisionDetection.js";
+
 export default class Ball {
     constructor(game) {
         this.image = document.getElementById('img_ball')
@@ -10,9 +12,13 @@ export default class Ball {
         this.gameWidth = game.gameWidth;
         this.gameHeight = game.gameHeight;
 
-        this.position = {x: 10, y: 10}
-        this.speed = {x: 4, y: 2}
         this.size = 16;
+        this.reset();
+    }
+
+    reset() {
+        this.position = {x: 50, y: 250}
+        this.speed = {x: 4, y: 2}
     }
 
     draw(ctx) {
@@ -35,20 +41,16 @@ export default class Ball {
         }
 
         //CHECK HIT DETECTION TO THE TOP OR BOTTOM
-        if(this.position.y + this.size > this.gameHeight || this.position.y < 0) {
+        if(this.position.y < 0) {
             this.speed.y = -this.speed.y;
         }
 
-        //CHECK HIT DETECTION WITH PADDLE
-        let bottomOfBall = this.position.y + this.size;
-        let topOfPaddle = this.game.paddle.position.y;
-        let leftSideOfPaddle = this.game.paddle.position.x;
-        let rightSideOfPaddle = this.game.paddle.position.x + this.game.paddle.width;
+        if (this.position.y + this.size > this.gameHeight) {
+            this.game.lives--;
+            this.reset();
+        }
 
-        if (bottomOfBall >= topOfPaddle
-            && this.position.x >= leftSideOfPaddle
-            && this.position.x + this.size <= rightSideOfPaddle
-            ) {
+        if (detectCollision(this, this.game.paddle)) {
             this.speed.y = -this.speed.y;
             this.position.y = this.game.paddle.position.y - this.size;
         }
