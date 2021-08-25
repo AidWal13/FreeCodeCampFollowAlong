@@ -18,7 +18,7 @@ export default class Ball {
 
     reset() {
         this.position = {x: 50, y: 250}
-        this.speed = {x: 4, y: 2}
+        this.speed = {x: 5, y: 4}
     }
 
     draw(ctx) {
@@ -51,8 +51,10 @@ export default class Ball {
         }
 
         if (detectCollision(this, this.game.paddle)) {
+            //invert y speed
             this.speed.y = -this.speed.y;
-            this.position.y = this.game.paddle.position.y - this.size;
+            //Ball's y position = the top side of the paddle - the ball size/height
+            //this.position.y = this.game.paddle.position.y - this.size;
         }
     }
 }
