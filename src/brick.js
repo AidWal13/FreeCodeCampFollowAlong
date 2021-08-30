@@ -1,4 +1,4 @@
-import { detectCollision } from "./collisionDetection.js";
+import { detectCollision, detectBallLeftSideCollision, detectBallRightSideCollision } from "./collisionDetection.js";
 
 export default class Brick {
     constructor(game, position) {
@@ -17,9 +17,14 @@ export default class Brick {
     update() {
         if (detectCollision(this.game.ball, this)) {
             this.game.ball.speed.y = -this.game.ball.speed.y;
-
             this.markedForDeletion = true;
         }
+
+        if (detectBallLeftSideCollision(this.game.ball, this) || detectBallRightSideCollision(this.game.ball, this)) {
+            this.game.ball.speed.x = -this.game.ball.speed.x;
+            this.markedForDeletion = true;
+        }
+
     }
 
     draw(ctx) {
